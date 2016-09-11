@@ -1,5 +1,7 @@
 # movie
 
+git clone https://github.com/andreevWork/movie.git
+
 Scripts:
 * For run test: ```npm test```
 * For build production app and server versions: ```npm run build```
