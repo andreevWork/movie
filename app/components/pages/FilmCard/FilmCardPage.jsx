@@ -2,12 +2,20 @@ import './styl/FilmCard.styl';
 import PageTitle from '../../common/PageTitle/PageTitle';
 import { connect } from 'react-redux';
 import {getApiForFilm, getPayloadForFilm} from "../../../routes/UrlsMapping";
+import GoToFilm from "../../../actions/GoToFilm";
 
 class FilmCard extends React.Component {
 
-    render() {
-        let {Poster, Title} = this.props.current_film,
-            keys = Object.keys(this.props.current_film);
+    componentDidMount() {
+        if(!this.props.current_film) {
+            this.props.initPage(this.props.params.id);
+        }
+    }
+
+    renderCard() {
+        let {current_film} = this.props,
+            {Poster = '', Title = ''} = current_film,
+            keys = Object.keys(current_film);
 
         return <div className="film-card">
             <PageTitle title={Title} />
@@ -32,7 +40,7 @@ class FilmCard extends React.Component {
                             <td>{key}:</td>
                             <td>
                                 <div className="film-card__props">
-                                    {this.props.current_film[key]}
+                                    {current_film[key]}
                                 </div>
                             </td>
                         </tr>;
@@ -43,10 +51,28 @@ class FilmCard extends React.Component {
         </div>;
     }
 
+    render() {
+        if(this.props.current_film && this.props.current_film.Response) {
+            return this.renderCard();
+        } else if(this.props.current_film && !this.props.current_film.Response) {
+            return <span>'Incorrect imdbID'</span>;
+        } else {
+            return null;
+        }
+    }
+
     notRenderProps(key) {
         return key === "Title" || key === 'Poster' || key === 'imdbID' || key === 'Response';
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        initPage(imdbID) {
+            dispatch(GoToFilm(imdbID));
+        }
+    }
+};
 
 const mapStateToProps = (state) => {
     return {
@@ -55,7 +81,8 @@ const mapStateToProps = (state) => {
 };
 
 const FilmCardPage = connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(FilmCard);
 
 if(IS_SERVER) {

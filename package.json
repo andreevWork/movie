@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cd app/_test && ../../node_modules/.bin/webpack && karma start --single-run"
+    "test": "cd app/_test && ../../node_modules/.bin/webpack && karma start --single-run",
+    "build": "cd app && ../node_modules/.bin/webpack --production && ../node_modules/.bin/webpack --production --config webpack.server.config.js && echo 'Build Complete Success'"
   },
   "keywords": [],
   "author": "",

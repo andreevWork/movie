@@ -1,7 +1,8 @@
 import './styl/Index.styl';
 import PageTitle from '../../common/PageTitle/PageTitle';
-import SearchigFilm from '../../../actions/SearchigFilm';
-
+import SearchingFilm from '../../../actions/SearchingFilm';
+import { browserHistory } from 'react-router';
+import UrlsMapping from "../../../routes/UrlsMapping";
 import { connect } from 'react-redux';
 
 
@@ -21,6 +22,8 @@ class Index extends React.Component {
         e.preventDefault();
         if(this.state.value.length > 1) {
             this.props.search(this.state.value);
+        } else {
+            alert('Please enter longer title');
         }
     }
 
@@ -56,7 +59,12 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         search(str) {
-            dispatch(SearchigFilm(str));
+            dispatch(SearchingFilm(str, () => {
+                browserHistory.push({
+                    pathname: UrlsMapping.search_result,
+                    query: { s: str }
+                });
+            }));
         }
     }
 };

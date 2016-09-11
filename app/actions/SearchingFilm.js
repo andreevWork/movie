@@ -3,10 +3,9 @@ import SetSearchingPattern from "./SetSearchingPattern";
 import SetSearchingResult from "./SetSearchingResult";
 import EndRequest from "./EndRequest";
 import Request from "../utils/Request";
-import { browserHistory } from 'react-router';
-import UrlsMapping, {getApiForSearch, getPayloadForSearch} from "../routes/UrlsMapping";
+import {getApiForSearch, getPayloadForSearch} from "../routes/UrlsMapping";
 
-export default function(pattern) {
+export default function(pattern, cb) {
     return dispatch => {
         dispatch(StartRequest());
         dispatch(SetSearchingPattern(pattern));
@@ -15,10 +14,7 @@ export default function(pattern) {
             .then(res => {
                 dispatch(SetSearchingResult(getPayloadForSearch(res.data)));
                 dispatch(EndRequest());
-                browserHistory.push({
-                    pathname: UrlsMapping.search_result,
-                    query: { s: pattern }
-                });
+                if(cb) cb();
             })
     };
 }

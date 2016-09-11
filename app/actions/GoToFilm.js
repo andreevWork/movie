@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import UrlsMapping, {getApiForFilm, getPayloadForFilm} from "../routes/UrlsMapping";
 import FilmCardPage from '../components/pages/FilmCard/FilmCardPage';
 
-export default function(imdbID) {
+export default function(imdbID, cb) {
     return dispatch => {
         dispatch(StartRequest());
         new Request(getApiForFilm(imdbID))
@@ -14,9 +14,7 @@ export default function(imdbID) {
             .then(res => {
                 dispatch(SetCurrentFilm(getPayloadForFilm(res.data)));
                 dispatch(EndRequest());
-                browserHistory.push({
-                    pathname: UrlsMapping.film.replace(':id', imdbID)
-                });
+                if(cb) cb();
             })
     };
 }

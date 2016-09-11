@@ -3,3 +3,4 @@ node_modules/
 app/_test/_build
 dist/
 *.log
+server.js

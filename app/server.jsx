@@ -18,37 +18,30 @@ app.get('/*', function (req, res) {
     if(req.url.match(/favicon\.ico/)) return;
 
     match({ routes: Routes, location: req.url }, (e, red, renderProps) => {
-        let component = renderProps.components[0];
+        let component = renderProps.components[renderProps.components.length - 1];
         if(component.getApi) {
-            request(component.getApi(renderProps), function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    let initState = component.getPayload(JSON.parse(response.body)),
-                        store = createStore(
-                        reducer,
-                            initState
-                    );
-                    res.render('index',
-                        {
-                            html : renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>),
-                            _state : initState
-                        }
-                    );
-                }
+            request(component.getApi(renderProps), function (error, response) {
+                res.render(
+                    'index',
+                    getPropsToRender(component.getPayload(JSON.parse(response.body)), renderProps)
+                );
             });   
         } else {
-            let store = createStore(
-                reducer
+            res.render(
+                'index',
+                getPropsToRender({}, renderProps)
             );
-            res.render('index',
-                {
-                    html : renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>)
-                }
-            ); 
         }
-        
     });
-
 });
+
+function getPropsToRender(initialState, renderProps) {
+    let store = createStore(reducer, initialState);
+    return {
+        html : renderToString(<Provider store={store}><RouterContext {...renderProps} /></Provider>),
+        __state : initialState
+    };  
+}
 
 app.listen(3001, function () {
     console.log('Server was started on 3001 port.');

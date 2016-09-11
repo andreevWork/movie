@@ -3,14 +3,29 @@ import PageTitle from '../../common/PageTitle/PageTitle';
 import GoToFilm from '../../../actions/GoToFilm';
 import { connect } from 'react-redux';
 import {getApiForSearch, getPayloadForSearch} from "../../../routes/UrlsMapping";
+import SearchingFilm from '../../../actions/SearchingFilm';
+import { browserHistory } from 'react-router';
+import UrlsMapping from "../../../routes/UrlsMapping";
+import SetSearchingPattern from "../../../actions/SetSearchingPattern";
 
 class SearchResult extends React.Component {
+    componentDidMount() {
+        if(!this.props.search_result_collection) {
+            this.props.initPage(this.props.location.query.s);
+        } else {
+            if(!this.props.pattern) {
+                this.props.setPattern(this.props.location.query.s);
+            }
+        }
+    }
+    
     render() {
         return <div className="search-result">
             <PageTitle title="Searching Result" />
-            <div className="search-result-pattern">for: <b>{this.props.location.query.s}</b></div>
+            <div className="search-result-pattern">for: <b>{this.props.pattern}</b></div>
             <article className="search-result__list">
-                {this.props.search_result_collection.map(
+                {!this.props.search_result_collection && "Nothing was found"}
+                {this.props.search_result_collection && this.props.search_result_collection.map(
                     (movie, i) => <MovieSnippet goToFilm={this.props.goToFilm} key={i} {...movie} />
                 )}
             </article>
@@ -51,14 +66,25 @@ const MovieSnippet = ({Title, Year, Type, Poster, imdbID, goToFilm}) => <div cla
 
 const mapStateToProps = (state) => {
     return {
-        search_result_collection: state.search_result_collection
+        search_result_collection: state.search_result_collection,
+        pattern: state.pattern
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         goToFilm(imdbID) {
-            dispatch(GoToFilm(imdbID));
+            dispatch(GoToFilm(imdbID, () => {
+                browserHistory.push({
+                    pathname: UrlsMapping.film.replace(':id', imdbID)
+                });
+            }));
+        },
+        initPage(str) {
+            dispatch(SearchingFilm(str));
+        },
+        setPattern(str) {
+            dispatch(SetSearchingPattern(str));
         }
     }
 };
