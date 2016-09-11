@@ -1,0 +1,20 @@
+@import 'colors'
+@import 'sizes'
+
+body
+  min-width $min-width
+  background url(https://comicsrock.files.wordpress.com/2014/07/black-background-fabric-2-2560x1600-by-freeman.jpg) no-repeat center center fixed
+  background-size cover
+  padding 100px
+  box-sizing border-box
+
+  *
+    color $brand-color
+    box-sizing border-box
+
+input[type=text]::-ms-clear {  display: none; width : 0; height: 0; }
+input[type=text]::-ms-reveal {  display: none; width : 0; height: 0; }
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration { display: none; }

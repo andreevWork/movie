@@ -1,0 +1,48 @@
+@import 'colors'
+@import 'sizes'
+
+$list-item-width = 425px
+$poster-width = 150px
+$data-column-width = ($list-item-width - $poster-width) / 2
+
+.search-result
+  &-pattern
+    text-align center
+  &__list
+    display flex
+    flex-flow row wrap
+    justify-content: space-around
+    margin 100px auto
+
+    &-item
+      width $list-item-width
+      border-bottom 1px solid lighten($brand-bg-color, 10%)
+      margin 0 15px 40px 15px
+
+      &-link
+        cursor pointer
+        color #5e5eea
+        text-decoration underline
+        &:hover
+          text-decoration none
+
+      &-poster
+        width $poster-width
+        img
+          width 100%
+          cursor pointer
+
+      &-title
+        max-height: 5em;
+        overflow: auto;
+
+      &-data
+        width 100%
+
+        tr
+          :last-child
+            font-weight bold
+
+          td
+            width $data-column-width
+            text-align center

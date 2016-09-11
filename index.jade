@@ -1,0 +1,11 @@
+html(lang='en')
+   head
+     meta(charset='UTF-8')
+     meta(name='viewport', content='width=device-width, initial-scale=1')
+     title Searching Movies
+     link(rel='stylesheet', href='/main.css')
+   body
+     #container!= html
+     script.
+         window.__STATE__ = !{JSON.stringify(_state)}
+     script(src='/main.js')
